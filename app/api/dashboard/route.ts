@@ -50,10 +50,13 @@ export async function GET(request: NextRequest) {
 
     const kpis = calculateKPIs(videos || []);
     const dailyMetrics = calculateDailyMetrics(videos || []);
-    const topVideos = getTopVideos(videos || [], 10);
-    const topAccounts = getTopAccounts(videos || [], 10);
 
-    return NextResponse.json({ kpis, dailyMetrics, videos: videos || [], topVideos, topAccounts });
+    return NextResponse.json({
+      kpis,
+      dailyMetrics,
+      dedupedData: videos || [],
+      totalDaysAvailable: dailyMetrics.length
+    });
   } catch (error: any) {
     console.error('API error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
