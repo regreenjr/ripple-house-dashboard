@@ -9,6 +9,7 @@ import { DailyEngagementChart } from '@/components/daily-engagement-chart';
 import { DailyBreakdownChart } from '@/components/daily-breakdown-chart';
 import { TopVideosTable } from '@/components/top-videos-table';
 import { TopAccountsTable } from '@/components/top-accounts-table';
+import { VideoAccountSearch } from '@/components/video-account-search';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Play, Heart, MessageCircle, Share2, Bookmark, TrendingUp, Users, Video, Eye, EyeOff } from 'lucide-react';
@@ -121,6 +122,10 @@ export default function DashboardPage() {
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TopVideosTable videos={data?.dedupedData || []} isLoading={isLoading} />
           <TopAccountsTable videos={data?.dedupedData || []} isLoading={isLoading} />
+        </div>
+
+        <div className="mt-6">
+          <VideoAccountSearch videos={data?.dedupedData || []} isLoading={isLoading} />
         </div>
       </div>
     </div>
