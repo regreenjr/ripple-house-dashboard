@@ -5,6 +5,8 @@ import { useDashboardStore } from '@/stores/dashboardStore';
 import { KPICard } from '@/components/kpi-card';
 import { DashboardFilters } from '@/components/dashboard-filters';
 import { DailyViewsChart } from '@/components/daily-views-chart';
+import { DailyEngagementChart } from '@/components/daily-engagement-chart';
+import { DailyBreakdownChart } from '@/components/daily-breakdown-chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Play, Heart, MessageCircle, Share2, Bookmark, TrendingUp, Users, Video, Eye, EyeOff } from 'lucide-react';
@@ -76,14 +78,40 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 mt-8">
-          <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+          <Card className="border-border/50 bg-card/30">
             <CardHeader>
-              <CardTitle>Daily Performance</CardTitle>
-              <CardDescription>Views and likes over time</CardDescription>
+              <CardTitle className="text-base font-semibold text-foreground">Metrics</CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">Daily performance overview</CardDescription>
             </CardHeader>
             <CardContent className="h-80">
               {isLoading ? <Skeleton className="w-full h-full" /> : <DailyViewsChart data={data?.dailyMetrics || []} />}
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50 bg-card/30">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-foreground">Engagement</CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">Engagement rate trends</CardDescription>
+            </CardHeader>
+            <CardContent className="h-80">
+              <DailyEngagementChart data={data?.dailyMetrics || []} isLoading={isLoading} timeWindow={timeWindow} />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-6">
+          <Card className="border-border/50 bg-card/30">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-foreground">
+                Daily Engagement Breakdown
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">
+                Detailed view of engagement components and plays over time
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="h-[400px]">
+              <DailyBreakdownChart data={data?.dailyMetrics || []} isLoading={isLoading} />
             </CardContent>
           </Card>
         </div>
