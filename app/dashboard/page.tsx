@@ -59,7 +59,12 @@ export default function DashboardPage() {
         </div>
 
         <div className="mb-6">
-          <DashboardFilters totalDays={totalDaysAvailable} isLoading={isLoading} />
+          <DashboardFilters
+            totalDays={totalDaysAvailable}
+            isLoading={isLoading}
+            brands={data?.brands || []}
+            descriptionOptions={data?.descriptionOptions || []}
+          />
         </div>
 
         {isLoading ? (

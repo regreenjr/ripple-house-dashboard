@@ -50,12 +50,16 @@ export async function GET(request: NextRequest) {
 
     const kpis = calculateKPIs(videos || []);
     const dailyMetrics = calculateDailyMetrics(videos || []);
+    const brands = getBrands(videos || []);
+    const descriptionOptions = getDescriptionOptions(videos || []);
 
     return NextResponse.json({
       kpis,
       dailyMetrics,
       dedupedData: videos || [],
-      totalDaysAvailable: dailyMetrics.length
+      totalDaysAvailable: dailyMetrics.length,
+      brands,
+      descriptionOptions
     });
   } catch (error: any) {
     console.error('API error:', error);
@@ -139,4 +143,47 @@ function getTopAccounts(videos: any[], limit: number) {
     }))
     .sort((a, b) => b.total_views - a.total_views)
     .slice(0, limit);
+}
+
+function getBrands(videos: any[]): string[] {
+  const brands = new Set(videos.map(v => v.brand).filter(Boolean));
+  const blocked = new Set(['PLEASEEE', 'Unknown', '0', '2', '3']);
+  return Array.from(brands).filter(brand => brand && !blocked.has(brand.trim()));
+}
+
+function getDescriptionOptions(videos: any[]) {
+  const descriptionMap = new Map();
+
+  videos.forEach(video => {
+    const text = video.description || '';
+    if (!text.trim()) return;
+
+    const normalized = text.toLowerCase().trim().replace(/\s+/g, ' ');
+    const id = Buffer.from(normalized).toString('base64').substring(0, 12);
+
+    if (descriptionMap.has(id)) {
+      const existing = descriptionMap.get(id);
+      existing.count++;
+      if (video.date_posted < existing.firstPosted) {
+        existing.firstPosted = video.date_posted;
+      }
+      if (video.date_posted > existing.lastPosted) {
+        existing.lastPosted = video.date_posted;
+      }
+    } else {
+      descriptionMap.set(id, {
+        id,
+        text,
+        normalizedText: normalized,
+        count: 1,
+        firstPosted: video.date_posted,
+        lastPosted: video.date_posted,
+      });
+    }
+  });
+
+  return Array.from(descriptionMap.values()).sort((a, b) => {
+    if (b.count !== a.count) return b.count - a.count;
+    return a.normalizedText.localeCompare(b.normalizedText);
+  });
 }

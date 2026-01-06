@@ -27,15 +27,20 @@ export const getDeltaColor = (delta: number): string => {
   return 'text-muted-foreground';
 };
 
+/**
+ * Formata data para exibição compacta
+ * @param dateString - Data no formato YYYY-MM-DD
+ * @returns Data formatada como "MMM DD, YYYY" (ex: "Oct 14, 2025")
+ */
 export const formatDateCompact = (dateString: string): string => {
   try {
-    const date = new Date(dateString + 'T00:00:00');
+    const date = new Date(dateString + 'T00:00:00'); // Evita timezone issues
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
   } catch {
-    return dateString;
+    return dateString; // Fallback
   }
 };

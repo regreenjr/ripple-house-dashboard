@@ -6,7 +6,9 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { TimeWindow } from '@/types/video';
+import { TimeWindow, DescriptionOption } from '@/types/video';
+import { BrandFilter } from '@/components/brand-filter';
+import { DescriptionFilter } from '@/components/description-filter';
 import { format, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -15,9 +17,11 @@ import type { DateRange } from 'react-day-picker';
 interface DashboardFiltersProps {
   totalDays?: number;
   isLoading?: boolean;
+  brands?: string[];
+  descriptionOptions?: DescriptionOption[];
 }
 
-export function DashboardFilters({ totalDays = 0, isLoading = false }: DashboardFiltersProps) {
+export function DashboardFilters({ totalDays = 0, isLoading = false, brands = [], descriptionOptions = [] }: DashboardFiltersProps) {
   const {
     timeWindow,
     setTimeWindow,
@@ -54,7 +58,7 @@ export function DashboardFilters({ totalDays = 0, isLoading = false }: Dashboard
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-6">
-        {/* Left side: Data Reference */}
+        {/* Left side: Filters */}
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
             <div className="text-[11px] font-medium text-muted-foreground/70 uppercase tracking-wider">
@@ -64,6 +68,11 @@ export function DashboardFilters({ totalDays = 0, isLoading = false }: Dashboard
               {anchorDate ? format(parseISO(anchorDate), 'MMM d, yyyy') : format(new Date(), 'MMM d, yyyy')}
             </div>
           </div>
+
+          <div className="h-8 w-px bg-border" />
+
+          <BrandFilter brands={brands} isLoading={isLoading} />
+          <DescriptionFilter availableOptions={descriptionOptions} isLoading={isLoading} />
         </div>
 
         {/* Center: Period filters */}
