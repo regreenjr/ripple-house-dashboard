@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from '@tanstack/react-query';
+import { useDashboardStore } from '@/stores/dashboardStore';
 import { KPICard } from '@/components/kpi-card';
+import { DashboardFilters } from '@/components/dashboard-filters';
 import { DailyViewsChart } from '@/components/daily-views-chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,9 +16,11 @@ async function fetchDashboardData(timeWindow: string = 'last30') {
 }
 
 export default function DashboardPage() {
+  const { timeWindow } = useDashboardStore();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['dashboard', 'last30'],
-    queryFn: () => fetchDashboardData('last30'),
+    queryKey: ['dashboard', timeWindow],
+    queryFn: () => fetchDashboardData(timeWindow),
   });
 
   if (error) {
@@ -39,12 +43,18 @@ export default function DashboardPage() {
     totalShares: 0, totalBookmarks: 0, engagementRate: 0, videosWithZeroViewsPercent: 0, avgViews: 0
   };
 
+  const totalDaysAvailable = data?.dailyMetrics?.length || 0;
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[1600px] mx-auto px-6 py-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Ripple House Dashboard</h1>
-          <p className="text-muted-foreground">TikTok performance analytics - Last 30 days</p>
+          <p className="text-muted-foreground">TikTok performance analytics</p>
+        </div>
+
+        <div className="mb-6">
+          <DashboardFilters totalDays={totalDaysAvailable} isLoading={isLoading} />
         </div>
 
         {isLoading ? (
@@ -52,17 +62,17 @@ export default function DashboardPage() {
             {[...Array(10)].map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
-            <KPICard title="Published Videos" value={kpis.publishedVideos} icon={Video} tooltip="Total number of videos published" />
-            <KPICard title="Active Accounts" value={kpis.activeAccounts} icon={Users} tooltip="Number of unique accounts that posted videos" />
-            <KPICard title="Total Views" value={kpis.totalViews} icon={Play} tooltip="Cumulative number of video plays" />
-            <KPICard title="Avg Views per Video" value={Math.round(kpis.avgViews)} icon={Eye} tooltip="Average number of views per published video" />
-            <KPICard title="Total Likes" value={kpis.totalLikes} icon={Heart} tooltip="Total number of likes received" />
-            <KPICard title="Total Comments" value={kpis.totalComments} icon={MessageCircle} tooltip="Total number of comments" />
-            <KPICard title="Total Shares" value={kpis.totalShares} icon={Share2} tooltip="Total number of shares" />
-            <KPICard title="Total Bookmarks" value={kpis.totalBookmarks} icon={Bookmark} tooltip="Total number of bookmarks/saves" />
-            <KPICard title="Engagement Rate" value={kpis.engagementRate} format="percent" icon={TrendingUp} tooltip="Average engagement rate (interactions/views)" />
-            <KPICard title="Videos with Zero Views" value={kpis.videosWithZeroViewsPercent} format="percent" icon={EyeOff} tooltip="Percentage of videos with no views" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 animate-fade-in">
+            <KPICard title="Published Videos" value={kpis.publishedVideos} icon={<Video className="h-5 w-5" />} tooltip="Total number of videos published" />
+            <KPICard title="Active Accounts" value={kpis.activeAccounts} icon={<Users className="h-5 w-5" />} tooltip="Number of unique accounts that posted videos" />
+            <KPICard title="Total Views" value={kpis.totalViews} icon={<Play className="h-5 w-5" />} tooltip="Cumulative number of video plays" />
+            <KPICard title="Avg Views per Video" value={Math.round(kpis.avgViews)} icon={<Eye className="h-5 w-5" />} tooltip="Average number of views per published video" />
+            <KPICard title="Total Likes" value={kpis.totalLikes} icon={<Heart className="h-5 w-5" />} tooltip="Total number of likes received" />
+            <KPICard title="Total Comments" value={kpis.totalComments} icon={<MessageCircle className="h-5 w-5" />} tooltip="Total number of comments" />
+            <KPICard title="Total Shares" value={kpis.totalShares} icon={<Share2 className="h-5 w-5" />} tooltip="Total number of shares" />
+            <KPICard title="Total Bookmarks" value={kpis.totalBookmarks} icon={<Bookmark className="h-5 w-5" />} tooltip="Total number of bookmarks/saves" />
+            <KPICard title="Engagement Rate" value={kpis.engagementRate} format="percent" icon={<TrendingUp className="h-5 w-5" />} tooltip="Average engagement rate (interactions/views)" />
+            <KPICard title="Videos with Zero Views" value={kpis.videosWithZeroViewsPercent} format="percent" icon={<EyeOff className="h-5 w-5" />} tooltip="Percentage of videos with no views" />
           </div>
         )}
 
