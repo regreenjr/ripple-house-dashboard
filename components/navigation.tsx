@@ -20,7 +20,7 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-200 shadow-sm">
+    <nav className="bg-[hsl(218,32%,16%)] border-b border-[hsl(218,20%,24%)] shadow-sm">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
@@ -32,8 +32,8 @@ export function Navigation() {
                 </svg>
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-gray-900">Ripplehaus</span>
-                <span className="text-xs text-gray-500 -mt-1">Dashboard</span>
+                <span className="text-lg font-bold text-white">Ripplehaus</span>
+                <span className="text-xs text-gray-400 -mt-1">Dashboard</span>
               </div>
             </div>
             <div className="hidden md:flex items-center gap-1">
@@ -49,7 +49,7 @@ export function Navigation() {
                         'gap-2',
                         isActive
                           ? 'bg-primary text-white hover:bg-primary/90'
-                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                          : 'text-gray-300 hover:bg-[hsl(218,32%,20%)] hover:text-white'
                       )}
                     >
                       <Icon className="h-4 w-4" />
@@ -63,10 +63,10 @@ export function Navigation() {
 
           <div className="flex items-center gap-3">
             <div className="hidden lg:flex items-center gap-2">
-              <p className="text-sm font-medium text-gray-700">admin@ripplehaus.com</p>
+              <p className="text-sm font-medium text-gray-300">admin@ripplehaus.com</p>
               <Badge
                 variant="default"
-                className="capitalize shrink-0 bg-gray-900 text-white"
+                className="capitalize shrink-0 bg-primary text-white"
               >
                 Admin
               </Badge>
