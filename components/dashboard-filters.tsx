@@ -59,27 +59,14 @@ export function DashboardFilters({ totalDays = 0, isLoading = false, brands = []
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-6">
-        {/* Left side: Filters */}
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <div className="text-[11px] font-medium text-muted-foreground/70 uppercase tracking-wider">
-              DATA REFERENCE
-            </div>
-            <div className="text-sm font-bold text-foreground">
-              {anchorDate ? format(parseISO(anchorDate), 'MMM d, yyyy') : format(new Date(), 'MMM d, yyyy')}
-            </div>
-          </div>
+      <div className="flex items-center gap-4">
+        {/* Filters */}
+        <BrandFilter brands={brands} isLoading={isLoading} />
+        <DescriptionFilter availableOptions={descriptionOptions} isLoading={isLoading} />
 
-          <div className="h-8 w-px bg-border" />
-
-          <BrandFilter brands={brands} isLoading={isLoading} />
-          <DescriptionFilter availableOptions={descriptionOptions} isLoading={isLoading} />
-        </div>
-
-        {/* Center: Period filters */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground/70 mr-1">Period:</span>
+        {/* Period label */}
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs text-muted-foreground/70">Period:</span>
           <Button
             variant={timeWindow === 'daily' ? 'default' : 'ghost'}
             size="sm"
@@ -167,37 +154,6 @@ export function DashboardFilters({ totalDays = 0, isLoading = false, brands = []
           >
             All Time ({isLoading ? '—' : totalDays})
           </Button>
-        </div>
-
-        {/* Right side: Checkboxes */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="overall-mode"
-              checked={overallMode}
-              onCheckedChange={(checked) => setOverallMode(checked === true)}
-            />
-            <Label
-              htmlFor="overall-mode"
-              className="text-xs font-medium cursor-pointer whitespace-nowrap"
-            >
-              Overall by Brand
-            </Label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="hide-unknown"
-              checked={hideUnknown}
-              onCheckedChange={(checked) => setHideUnknown(checked === true)}
-            />
-            <Label
-              htmlFor="hide-unknown"
-              className="text-xs font-medium cursor-pointer whitespace-nowrap"
-            >
-              Hide Unknown Brands
-            </Label>
-          </div>
         </div>
       </div>
 
