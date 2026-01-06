@@ -10,6 +10,7 @@ import { DailyBreakdownChart } from '@/components/daily-breakdown-chart';
 import { TopVideosTable } from '@/components/top-videos-table';
 import { TopAccountsTable } from '@/components/top-accounts-table';
 import { VideoAccountSearch } from '@/components/video-account-search';
+import { OverallByBrand } from '@/components/overall-by-brand';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Play, Heart, MessageCircle, Share2, Bookmark, TrendingUp, Users, Video, Eye, EyeOff } from 'lucide-react';
@@ -21,7 +22,7 @@ async function fetchDashboardData(timeWindow: string = 'last30') {
 }
 
 export default function DashboardPage() {
-  const { timeWindow } = useDashboardStore();
+  const { timeWindow, overallMode } = useDashboardStore();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['dashboard', timeWindow],
@@ -86,7 +87,13 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        {overallMode ? (
+          <div className="mt-8">
+            <OverallByBrand videos={data?.dedupedData || []} isLoading={isLoading} brandsInRange={data?.brands} />
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
           <Card className="border-border/50 bg-card/30">
             <CardHeader>
               <CardTitle className="text-base font-semibold text-foreground">Metrics</CardTitle>
@@ -132,6 +139,8 @@ export default function DashboardPage() {
         <div className="mt-6">
           <VideoAccountSearch videos={data?.dedupedData || []} isLoading={isLoading} />
         </div>
+          </>
+        )}
       </div>
     </div>
   );

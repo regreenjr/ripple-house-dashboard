@@ -1,4 +1,4 @@
-import { VideoPerformance, ProcessedVideo, AccountAggregate, BestPerformingAccount } from '@/types/video';
+import { VideoPerformance, ProcessedVideo, AccountAggregate, BestPerformingAccount, BrandAggregate } from '@/types/video';
 
 export const processVideos = (videos: VideoPerformance[]): ProcessedVideo[] => {
   return videos.map(v => ({
@@ -55,6 +55,69 @@ export const aggregateByAccount = (videos: VideoPerformance[]): AccountAggregate
 export const truncateDescription = (text: string, maxLength: number = 100): string => {
   if (!text) return '';
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+};
+
+export const aggregateByBrand = (videos: VideoPerformance[]): BrandAggregate[] => {
+  const brandMap = new Map<string, {
+    brand: string;
+    total_videos: number;
+    total_views: number;
+    total_likes: number;
+    total_comments: number;
+    total_shares: number;
+    total_saves: number;
+    total_interactions: number;
+    accounts: Set<string>;
+  }>();
+
+  videos.forEach(video => {
+    const brandName = video.brand || 'Unknown';
+    const existing = brandMap.get(brandName);
+
+    const interactions = (video.likes || 0) + (video.comments || 0) +
+                        (video.shares || 0) + (video.saves || 0);
+
+    if (!existing) {
+      brandMap.set(brandName, {
+        brand: brandName,
+        total_videos: 1,
+        total_views: video.plays || 0,
+        total_likes: video.likes || 0,
+        total_comments: video.comments || 0,
+        total_shares: video.shares || 0,
+        total_saves: video.saves || 0,
+        total_interactions: interactions,
+        accounts: new Set([video.username]),
+      });
+    } else {
+      existing.total_videos += 1;
+      existing.total_views += video.plays || 0;
+      existing.total_likes += video.likes || 0;
+      existing.total_comments += video.comments || 0;
+      existing.total_shares += video.shares || 0;
+      existing.total_saves += video.saves || 0;
+      existing.total_interactions += interactions;
+      existing.accounts.add(video.username);
+    }
+  });
+
+  return Array.from(brandMap.values()).map(brand => ({
+    brand: brand.brand,
+    total_videos: brand.total_videos,
+    total_views: brand.total_views,
+    total_likes: brand.total_likes,
+    total_comments: brand.total_comments,
+    total_shares: brand.total_shares,
+    total_saves: brand.total_saves,
+    total_interactions: brand.total_interactions,
+    active_accounts: brand.accounts.size,
+    avg_engagement_rate: brand.total_views > 0
+      ? brand.total_interactions / brand.total_views
+      : 0,
+    avg_views: brand.total_videos > 0
+      ? brand.total_views / brand.total_videos
+      : 0,
+  }));
 };
 
 export const getBestPerformingAccounts = (videos: VideoPerformance[]): BestPerformingAccount[] => {

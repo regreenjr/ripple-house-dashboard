@@ -29,7 +29,9 @@ export function DashboardFilters({ totalDays = 0, isLoading = false, brands = []
     setHideUnknown,
     customRange,
     setCustomRange,
-    anchorDate
+    anchorDate,
+    overallMode,
+    setOverallMode
   } = useDashboardStore();
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(
@@ -167,19 +169,35 @@ export function DashboardFilters({ totalDays = 0, isLoading = false, brands = []
           </Button>
         </div>
 
-        {/* Right side: Hide Unknown checkbox */}
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="hide-unknown"
-            checked={hideUnknown}
-            onCheckedChange={(checked) => setHideUnknown(checked === true)}
-          />
-          <Label
-            htmlFor="hide-unknown"
-            className="text-xs font-medium cursor-pointer whitespace-nowrap"
-          >
-            Hide Unknown Brands
-          </Label>
+        {/* Right side: Checkboxes */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="overall-mode"
+              checked={overallMode}
+              onCheckedChange={(checked) => setOverallMode(checked === true)}
+            />
+            <Label
+              htmlFor="overall-mode"
+              className="text-xs font-medium cursor-pointer whitespace-nowrap"
+            >
+              Overall by Brand
+            </Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="hide-unknown"
+              checked={hideUnknown}
+              onCheckedChange={(checked) => setHideUnknown(checked === true)}
+            />
+            <Label
+              htmlFor="hide-unknown"
+              className="text-xs font-medium cursor-pointer whitespace-nowrap"
+            >
+              Hide Unknown Brands
+            </Label>
+          </div>
         </div>
       </div>
 

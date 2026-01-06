@@ -114,6 +114,20 @@ export interface BestPerformingAccount {
   days_with_posts: number;
 }
 
+export interface BrandAggregate {
+  brand: string;
+  total_videos: number;
+  total_views: number;
+  total_likes: number;
+  total_comments: number;
+  total_shares: number;
+  total_saves: number;
+  total_interactions: number;
+  avg_engagement_rate: number;
+  active_accounts: number;
+  avg_views: number;
+}
+
 // Description Filter Types
 export type DescriptionMatchMode = 'exact' | 'contains';
 export type DescriptionCombineMode = 'OR' | 'AND';
